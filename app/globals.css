@@ -1,0 +1,78 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Styles Apple Intelligence */
+@layer base {
+  body {
+    @apply bg-white text-gray-900 font-light;
+    font-family: 'SF Pro Display', 'Inter', 'Helvetica Neue', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer components {
+  /* Dégradé Apple Intelligence */
+  .bg-apple-intelligence {
+    background: linear-gradient(90deg, #2997ff, #a259c2, #f46f30, #f4284a);
+  }
+  
+  /* Texte avec dégradé Apple Intelligence */
+  .text-apple-intelligence {
+    background: linear-gradient(90deg, #2997ff, #a259c2, #f46f30, #f4284a);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  /* Effet glassmorphism épuré */
+  .glass {
+    @apply bg-white/80 backdrop-blur-sm border border-white/20;
+  }
+  
+  /* Animation d'apparition douce */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .animate-fade-in-up {
+    animation: fadeInUp 0.6s ease-out forwards;
+  }
+  
+  /* Effet de survol Apple */
+  .apple-hover {
+    @apply transition-all duration-300 hover:scale-[1.02] hover:shadow-lg;
+  }
+  
+  /* Style de scrollbar minimaliste */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 2px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.2);
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+} 
