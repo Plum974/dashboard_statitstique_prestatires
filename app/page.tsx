@@ -6,6 +6,7 @@ import FliiinkerCard from '@/components/FliiinkerCard'
 import SearchBar from '@/components/FilterBar'
 import StatsOverview from '@/components/StatsOverview'
 import FliiinkerDetailModal from '@/components/FliiinkerDetailModal'
+import FliiinkerRatingModal from '@/components/FliiinkerRatingModal'
 import AdvancedStatistics from '@/components/AdvancedStatistics'
 import { BarChart3, Users, Map, List, Activity } from 'lucide-react'
 import dynamic from 'next/dynamic'
@@ -34,6 +35,8 @@ export default function Dashboard() {
   const [error, setError] = useState<string | null>(null)
   const [selectedFliiinker, setSelectedFliiinker] = useState<FliiinkerData | null>(null)
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false)
+  const [selectedRatingFliiinker, setSelectedRatingFliiinker] = useState<FliiinkerData | null>(null)
+  const [isRatingModalOpen, setIsRatingModalOpen] = useState(false)
   const [activeTab, setActiveTab] = useState<TabType>('list')
   const [searchTerm, setSearchTerm] = useState('')
 
@@ -105,6 +108,16 @@ export default function Dashboard() {
   const handleCloseDetails = () => {
     setIsDetailModalOpen(false)
     setSelectedFliiinker(null)
+  }
+
+  const handleViewRatings = (fliiinker: FliiinkerData) => {
+    setSelectedRatingFliiinker(fliiinker)
+    setIsRatingModalOpen(true)
+  }
+
+  const handleCloseRatings = () => {
+    setIsRatingModalOpen(false)
+    setSelectedRatingFliiinker(null)
   }
 
   const getStats = () => {
@@ -258,6 +271,7 @@ export default function Dashboard() {
                           decision={decisions[fliiinker.profile.id]}
                           onDecision={handleDecision}
                           onViewDetails={handleViewDetails}
+                          onViewRatings={handleViewRatings}
                         />
                       ))}
                     </div>
@@ -342,6 +356,13 @@ export default function Dashboard() {
         fliiinker={selectedFliiinker}
         isOpen={isDetailModalOpen}
         onClose={handleCloseDetails}
+      />
+
+      {/* Modal des avis et évaluations */}
+      <FliiinkerRatingModal
+        fliiinker={selectedRatingFliiinker}
+        isOpen={isRatingModalOpen}
+        onClose={handleCloseRatings}
       />
     </div>
   )

@@ -1,10 +1,11 @@
 'use client'
 
 import { FliiinkerData, DecisionAction } from '@/types/database'
-import { MapPin, CheckCircle, Calendar, Briefcase, Phone, Eye } from 'lucide-react'
+import { MapPin, CheckCircle, Calendar, Briefcase, Phone, Eye, Star } from 'lucide-react'
 import { format } from 'date-fns'
 import { fr } from 'date-fns/locale'
 import { Avatar } from '@heroui/react'
+import { useState, useEffect } from 'react'
 
 const base_url_image = process.env.NEXT_PUBLIC_BASE_URL_IMAGE
 
@@ -25,10 +26,12 @@ interface FliiinkerCardProps {
   decision?: DecisionAction
   onDecision: (fliiinkerId: string, action: DecisionAction) => void
   onViewDetails: (fliiinker: FliiinkerData) => void
+  onViewRatings?: (fliiinker: FliiinkerData) => void
 }
 
-export default function FliiinkerCard({ fliiinker, decision, onDecision, onViewDetails }: FliiinkerCardProps) {
+export default function FliiinkerCard({ fliiinker, decision, onDecision, onViewDetails, onViewRatings }: FliiinkerCardProps) {
   const { profile, fliiinkerProfile, addresses, services, serviceDetails } = fliiinker
+  const [ratingStats, setRatingStats] = useState<{ averageRating: number; totalRatings: number } | null>(null)
 
   // Obtenir l'adresse principale
   const mainAddress = addresses.find(addr => addr.is_default) || addresses[0]
@@ -44,6 +47,38 @@ export default function FliiinkerCard({ fliiinker, decision, onDecision, onViewD
         description: details?.description
       }
     })
+
+  // Récupérer les stats de rating
+  useEffect(() => {
+    const fetchRatingStats = async () => {
+      try {
+        const response = await fetch(`/api/ratings?fliiinkerId=${profile.id}&type=stats`)
+        if (response.ok) {
+          const data = await response.json()
+          setRatingStats(data.data)
+        }
+      } catch (error) {
+        console.error('Erreur lors de la récupération des stats de rating:', error)
+      }
+    }
+
+    fetchRatingStats()
+  }, [profile.id])
+
+  const renderStars = (rating: number) => {
+    return (
+      <div className="flex">
+        {[1, 2, 3, 4, 5].map((star) => (
+          <Star
+            key={star}
+            className={`w-3 h-3 ${
+              star <= rating ? 'text-yellow-400 fill-current' : 'text-gray-300'
+            }`}
+          />
+        ))}
+      </div>
+    )
+  }
 
   return (
     <div className="h-full flex flex-col bg-white/90 backdrop-blur-sm border-2 border-gray-100/50 hover:border-gray-200/50 rounded-3xl p-6 hover:shadow-2xl hover:bg-white transition-all duration-500 group relative overflow-hidden">
@@ -211,6 +246,31 @@ export default function FliiinkerCard({ fliiinker, decision, onDecision, onViewD
             <div className="text-xs text-purple-700 font-bold uppercase tracking-wide">Adresses</div>
           </div>
         </div>
+
+        {/* Section Rating */}
+        {ratingStats && ratingStats.totalRatings > 0 && (
+          <div className="mb-4">
+            <button
+              onClick={() => onViewRatings?.(fliiinker)}
+              className="w-full bg-gradient-to-r from-yellow-50 to-orange-50 hover:from-yellow-100 hover:to-orange-100 rounded-xl p-3 border border-yellow-200/50 hover:border-yellow-300/50 transition-all duration-300 group/rating"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  {renderStars(Math.round(ratingStats.averageRating))}
+                  <span className="text-sm font-bold text-gray-800">
+                    {ratingStats.averageRating.toFixed(1)}
+                  </span>
+                </div>
+                <div className="text-xs text-gray-600 font-medium">
+                  {ratingStats.totalRatings} avis
+                </div>
+              </div>
+              <div className="text-xs text-gray-500 mt-1 group-hover/rating:text-gray-700 transition-colors">
+                Voir tous les avis
+              </div>
+            </button>
+          </div>
+        )}
 
         {/* Partie inférieure fixe - Date et bouton toujours alignés */}
         <div className="mt-auto">

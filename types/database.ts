@@ -117,4 +117,43 @@ export interface FliiinkerData {
   addressLocations: AddressLocation[];
 }
 
+export interface FliiinkerServiceRating {
+  id: number;
+  service_id: number;
+  created_at: string;
+  rating: number;
+  comment?: string;
+  comment_is_visible: boolean;
+  fliiinker_id: string;
+  customer_id: string;
+  order_id?: number;
+  // Données du profil client jointes
+  customer_profile?: PublicProfile;
+}
+
+export interface CustomerRating {
+  id: number;
+  created_at: string;
+  rating: number;
+  comment?: string;
+  comment_is_visible: boolean;
+  customer_id: string;
+  fliiinker_id: string;
+  order_id?: number;
+  // Données du profil fliiinker jointes
+  fliiinker_profile?: PublicProfile;
+}
+
+export interface RatingStats {
+  averageRating: number;
+  totalRatings: number;
+  ratingsBreakdown: {
+    1: number;
+    2: number;
+    3: number;
+    4: number;
+    5: number;
+  };
+}
+
 export type DecisionAction = 'approve' | 'reject' | 'pending' | 'review'; 

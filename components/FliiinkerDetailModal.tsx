@@ -16,6 +16,8 @@ const FliiinkerMap = dynamic(() => import('./FliiinkerMap'), {
   )
 })
 
+
+
 const base_url_image = process.env.NEXT_PUBLIC_BASE_URL_IMAGE
 
 // Fonction pour construire l'URL de l'avatar
@@ -281,6 +283,8 @@ export default function FliiinkerDetailModal({ fliiinker, isOpen, onClose }: Fli
                   ))}
                 </div>
               </div>
+
+
             </div>
 
             {/* Colonne droite - Carte et adresses */}
